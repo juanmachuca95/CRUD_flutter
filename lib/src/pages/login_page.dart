@@ -122,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
               suffixIcon: Icon( Icons.alternate_email ),
               icon: Icon( Icons.email ),
               counterText: snapshot.data,
+              errorText: snapshot.error
             ),
             onChanged: bloc.emailChange,
           ),
@@ -145,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
               suffixIcon: Icon( Icons.lock_open ),
               icon: Icon( Icons.lock_rounded),
               counterText: snapshot.data,
+              errorText: snapshot.error
             ),
             onChanged: bloc.passwordChange,
           ),
