@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fluttercrud/src/bloc/provider.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -8,7 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginForm() {
-
+    final bloc = Provider.of(context);
     final size = MediaQuery.of( context ).size;
-
+    
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -89,61 +90,82 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text('Ingreso', style: TextStyle( fontSize: 20.0 )),
                 SizedBox( height: 20.0 ),
-                _crearEmail(),
+                _crearEmail( bloc ),
                 SizedBox( height: 20.0 ),
-                _crearPassword(),
+                _crearPassword( bloc ),
                 SizedBox( height: 20.0 ),
                 _crearButton()
               ],
             ),
           )
+          ,
 
+          Text('¿Has olvidado la contraseña?'),
         ],
       )
     );
 
   }
 
-  Widget _crearEmail() {
-    return Container(
-      padding: EdgeInsets.symmetric( horizontal: 20.0, vertical: 10.0 ),
-      child: TextField(
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          hintText: 'Correo electronico . . .',
-          labelText: 'Email',
-          suffixIcon: Icon( Icons.alternate_email ),
-          icon: Icon( Icons.email )
-        ),
-      ),
-    );
+  Widget _crearEmail( LoginBloc bloc ) {
+
+    return StreamBuilder(
+      stream: bloc.emailStream,
+      builder: ( BuildContext context, AsyncSnapshot snapshot ){
+        return Container(
+          padding: EdgeInsets.symmetric( horizontal: 20.0, vertical: 10.0 ),
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: 'Correo electronico . . .',
+              labelText: 'Email',
+              suffixIcon: Icon( Icons.alternate_email ),
+              icon: Icon( Icons.email ),
+              counterText: snapshot.data,
+            ),
+            onChanged: bloc.emailChange,
+          ),
+        );
+      }
+    );    
   }
 
-  Widget _crearPassword() {
+  Widget _crearPassword( LoginBloc bloc ) {
 
-    return Container(
-      padding: EdgeInsets.symmetric( horizontal: 20.0, vertical: 10.0 ),
-      child: TextField(
-        
-        keyboardType: TextInputType.visiblePassword,
-        decoration: InputDecoration(
-          hintText: 'Escribe tu contraseña . . .',
-          labelText: 'Contraseña',
-          suffixIcon: Icon( Icons.lock_open ),
-          icon: Icon( Icons.lock_rounded)
-        ),
-      ),
+    return StreamBuilder(
+      stream: bloc.passwordStream,
+      builder: ( BuildContext context, AsyncSnapshot snapshot ){
+        return Container(
+          padding: EdgeInsets.symmetric( horizontal: 20.0, vertical: 10.0 ),
+          child: TextField(
+            keyboardType: TextInputType.visiblePassword,
+            decoration: InputDecoration(
+              hintText: 'Escribe tu contraseña . . .',
+              labelText: 'Contraseña',
+              suffixIcon: Icon( Icons.lock_open ),
+              icon: Icon( Icons.lock_rounded),
+              counterText: snapshot.data,
+            ),
+            onChanged: bloc.passwordChange,
+          ),
+        );
+      },
     );
+
   }
 
 
   Widget _crearButton(){
 
-    return MaterialButton(
-      onPressed: (){},
-      padding: EdgeInsets.all( 20.0 ),
-      color: Colors.blueAccent,
-      child: Text('Ingresar', style: TextStyle( color: Colors.white ))
+    return Container(
+      padding: EdgeInsets.symmetric( horizontal: 40.0 ),
+      child: MaterialButton(
+        minWidth: double.infinity,
+        onPressed: (){},
+        padding: EdgeInsets.all( 20.0 ),
+        color: Colors.deepPurple,
+        child: Text('Ingresar', style: TextStyle( color: Colors.white ))
+      ),
     );
 
   }
