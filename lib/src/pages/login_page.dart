@@ -167,10 +167,23 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.all( 20.0 ),
               color: Colors.blue,
               child: Text('Ingresar', style: TextStyle( color: Colors.black )),
-              onPressed: (!snapshot.hasData) ? null: (){},
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              onPressed: (!snapshot.hasData) ? null: ( ) => _login( bloc , context),
             ),
           );
         },
     );
+  }
+
+
+  _login( LoginBloc bloc, BuildContext context ){
+
+    print( " Email: $bloc.email" );
+    print( " Password: $bloc.password" );
+
+    //Navigator.pushNamed(context, 'home');
+    Navigator.pushReplacementNamed(context, 'home');
   }
 }

@@ -25,6 +25,10 @@ class LoginBloc with Validators{ // Aplicando Mixins para utilizar la validacion
   Function(String) get passwordChange => _passwordController.sink.add;
 
 
+  //Obtener los ultimos valos ingresados a los Streams
+  String get email => _emailController.value;
+  String get password => _passwordController.value;
+
   dispose(){
 
     _emailController?.close();

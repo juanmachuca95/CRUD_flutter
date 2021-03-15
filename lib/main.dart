@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttercrud/src/bloc/provider.dart';
 import 'package:fluttercrud/src/pages/home_page.dart';
 import 'package:fluttercrud/src/pages/login_page.dart';
- 
+import 'package:fluttercrud/src/pages/producto_page.dart';
 void main() => runApp(MyApp());
  
 class MyApp extends StatelessWidget {
@@ -13,12 +13,13 @@ class MyApp extends StatelessWidget {
       child:MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter CRUD',
-        initialRoute: 'login',
+        initialRoute: 'home',
 
         /**Mis Rutas */
         routes: <String, WidgetBuilder>{
-          'login' : ( BuildContext context ) =>  LoginPage(),
-          'home'  : ( BuildContext context ) =>  HomePage()
+          'login'     : ( BuildContext context ) =>  LoginPage(),
+          'home'      : ( BuildContext context ) =>  HomePage(),
+          'producto'  : ( BuildContext context ) => ProductoPage(),
         }
       )
     );
