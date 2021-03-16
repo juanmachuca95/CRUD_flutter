@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
             
             itemCount: productos.length,
             
-            itemBuilder: (context, i) => _crearItem(productos[i])
+            itemBuilder: (context, i) => _crearItem(context, productos[i])
 
           );
 
@@ -57,10 +57,23 @@ class HomePage extends StatelessWidget {
   }
 
 
-  Widget _crearItem(ProductoModel producto){
+  Widget _crearItem(BuildContext context, ProductoModel producto){
 
-    return ListTile(
-      title: Text('${ producto.titulo } ${ producto.valor }'),
+    return Dismissible(
+      key: UniqueKey(),
+      background: Container(
+        color: Colors.red,
+      ),
+      onDismissed: ( direccion ){
+
+        productosProvider.borrarProducto(producto.id);
+              
+      },
+      child: ListTile(
+        title: Text('${ producto.titulo } ${ producto.valor }'),
+        subtitle: Text(' ${ producto.id } '),
+        onTap: () => Navigator.pushNamed( context, 'producto')
+      ),
     );
 
   }
