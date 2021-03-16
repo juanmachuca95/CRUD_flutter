@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttercrud/src/providers/productos_provider.dart';
 import 'package:fluttercrud/src/utils/utils.dart' as utils;
+import 'package:fluttercrud/src/models/producto_model.dart';
 
 class ProductoPage extends StatefulWidget {
 
@@ -8,7 +10,11 @@ class ProductoPage extends StatefulWidget {
 }
 
 class _ProductoPageState extends State<ProductoPage> {
+  
   final formKey = GlobalKey<FormState>();
+  final productoProvider = new ProductosProvider();
+
+  ProductoModel producto = new ProductoModel();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +43,7 @@ class _ProductoPageState extends State<ProductoPage> {
               children: <Widget>[
                 _crearNombre(),
                 _crearPrecio(),
+                _crearDisponible(),
                 _crearBoton()
               ],
             ),
@@ -60,6 +67,7 @@ class _ProductoPageState extends State<ProductoPage> {
           return null;
         }
       },
+      onSaved: (value) => producto.titulo = value,
     );
 
   }
@@ -67,6 +75,7 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearPrecio(){
 
     return TextFormField(
+      initialValue: producto.valor.toString(),
       keyboardType: TextInputType.numberWithOptions(decimal:true),
       decoration: InputDecoration(
         labelText: 'Precio',
@@ -76,10 +85,24 @@ class _ProductoPageState extends State<ProductoPage> {
         return ( utils.isNumeric( value )) ? null : 'Solo números';
 
       },
+      onSaved: (value) => producto.valor = double.parse(value),
 
+    );
+  }
+
+
+  Widget _crearDisponible(){
+
+    return SwitchListTile(
+      value: producto.disponible,
+      title: Text('Disponible'),
+      onChanged: ( value ) => setState((){
+        producto.disponible = value;
+      })
     );
 
   }
+
 
   Widget _crearBoton(){
 
@@ -97,7 +120,16 @@ class _ProductoPageState extends State<ProductoPage> {
 
     if(!formKey.currentState.validate()) return;
 
+    formKey.currentState.save();
+
+    print( producto.titulo );
+    print( producto.valor );
+    print( producto.disponible );
     print("Todo okay");
+
+
+    productoProvider.crearProducto(producto); 
+    
 
   }
 }
