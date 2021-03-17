@@ -19,6 +19,11 @@ class _ProductoPageState extends State<ProductoPage> {
   @override
   Widget build(BuildContext context) {
     
+    final ProductoModel prodData = ModalRoute.of(context).settings.arguments;
+    if( producto != null ){
+      producto = prodData;
+    } 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Producto'),
@@ -56,6 +61,7 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearNombre(){
 
     return TextFormField(
+      initialValue: producto.titulo ?? '',
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Producto'
@@ -75,7 +81,7 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearPrecio(){
 
     return TextFormField(
-      initialValue: producto.valor.toString(),
+      initialValue: producto.valor.toString() ?? '',
       keyboardType: TextInputType.numberWithOptions(decimal:true),
       decoration: InputDecoration(
         labelText: 'Precio',
@@ -128,7 +134,15 @@ class _ProductoPageState extends State<ProductoPage> {
     print("Todo okay");
 
 
-    productoProvider.crearProducto(producto); 
+    if( producto == null ){
+
+      productoProvider.crearProducto(producto); 
+
+    }else{
+
+      productoProvider.editarProducto(producto);
+
+    }
     
 
   }

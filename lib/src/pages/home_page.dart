@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-//import 'package:fluttercrud/src/bloc/provider.dart';
+import 'package:fluttercrud/src/bloc/provider.dart';
 import 'package:fluttercrud/src/models/producto_model.dart';
 import 'package:fluttercrud/src/providers/productos_provider.dart';
 
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final productosProvider = new ProductosProvider();
 
   @override
   Widget build(BuildContext context) {
 
-    //final bloc = Provider.of(context);
+    final bloc = Provider.of(context);
 
     return Scaffold(
 
@@ -24,7 +29,6 @@ class HomePage extends StatelessWidget {
 
     );
   }
-
 
    Widget _crearListado(){
     //print(productosProvider.cargarProductos());
@@ -56,7 +60,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-
   Widget _crearItem(BuildContext context, ProductoModel producto){
 
     return Dismissible(
@@ -72,21 +75,21 @@ class HomePage extends StatelessWidget {
       child: ListTile(
         title: Text('${ producto.titulo } ${ producto.valor }'),
         subtitle: Text(' ${ producto.id } '),
-        onTap: () => Navigator.pushNamed( context, 'producto')
+        onTap: () => Navigator.pushNamed( context, 'producto', arguments: producto )
+                    .then((value) => setState((){})),
       ),
     );
 
   }
 
-
   Widget _crearBoton(BuildContext context){
 
     return FloatingActionButton(
       child: Icon( Icons.add ),
-      onPressed: () => Navigator.pushNamed(context, 'producto')
+      onPressed: () => Navigator.pushNamed( context, 'producto' )
+                      .then((value) => setState((){})),
     );
 
   }
-
 }
 
