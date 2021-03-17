@@ -11,20 +11,22 @@ class ProductoPage extends StatefulWidget {
 
 class _ProductoPageState extends State<ProductoPage> {
   
-  final formKey = GlobalKey<FormState>();
+  final formKey           = GlobalKey<FormState>();
+  final scaffoldKey       = GlobalKey<ScaffoldState>();
   final productoProvider = new ProductosProvider();
 
   ProductoModel producto = new ProductoModel();
 
   @override
   Widget build(BuildContext context) {
-    
-    final ProductoModel prodData = ModalRoute.of(context).settings.arguments;
+    //ModalRoute.of(context).settings.arguments
+    final ProductoModel prodData = new ProductoModel();
     if( producto != null ){
       producto = prodData;
     } 
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Producto'),
         actions: <Widget>[
@@ -66,6 +68,7 @@ class _ProductoPageState extends State<ProductoPage> {
       decoration: InputDecoration(
         labelText: 'Producto'
       ),
+      onSaved: (value) => producto.titulo = value,
       validator: (value){
         if( value.length < 3 ){
           return 'Ingresa el nombre del producto . . .';
@@ -73,7 +76,7 @@ class _ProductoPageState extends State<ProductoPage> {
           return null;
         }
       },
-      onSaved: (value) => producto.titulo = value,
+      
     );
 
   }
@@ -142,8 +145,22 @@ class _ProductoPageState extends State<ProductoPage> {
 
       productoProvider.editarProducto(producto);
 
-    }
-    
+    }    
+
+    mostrarSnackbar(" Se ha guardado exitosamente ");
 
   }
+
+  void mostrarSnackbar( String mensaje ){
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text( mensaje ),
+      duration: const Duration( milliseconds: 1500 ),
+      action: SnackBarAction(
+        label: 'ACTION',
+        onPressed: () { },
+      ),
+    ));
+  }
+
 }
