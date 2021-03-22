@@ -14,16 +14,23 @@ class _ProductoPageState extends State<ProductoPage> {
   final formKey           = GlobalKey<FormState>();
   final scaffoldKey       = GlobalKey<ScaffoldState>();
   final productoProvider = new ProductosProvider();
-
   ProductoModel producto = new ProductoModel();
+  bool action = false;
 
   @override
   Widget build(BuildContext context) {
-    //ModalRoute.of(context).settings.arguments
-    final ProductoModel prodData = new ProductoModel();
-    if( producto != null ){
-      producto = prodData;
-    } 
+    
+    final arguments = ModalRoute.of(context).settings.arguments;
+    
+    if(arguments != null){
+      producto = arguments;
+      action = true;
+    }else {
+      setState((){
+        producto = new ProductoModel();
+      });
+    }
+    print(producto);
 
     return Scaffold(
       key: scaffoldKey,
@@ -63,12 +70,12 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearNombre(){
 
     return TextFormField(
-      initialValue: producto.titulo ?? '',
+      initialValue: producto.titulo,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Producto'
       ),
-      onSaved: (value) => producto.titulo = value,
+      onSaved: (value) {producto.titulo = value;},
       validator: (value){
         if( value.length < 3 ){
           return 'Ingresa el nombre del producto . . .';
@@ -84,7 +91,7 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearPrecio(){
 
     return TextFormField(
-      initialValue: producto.valor.toString() ?? '',
+      initialValue: producto.valor.toString(),
       keyboardType: TextInputType.numberWithOptions(decimal:true),
       decoration: InputDecoration(
         labelText: 'Precio',
@@ -103,11 +110,11 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _crearDisponible(){
 
     return SwitchListTile(
-      value: producto.disponible,
+      value: (producto != null ) ? producto.disponible : false,
       title: Text('Disponible'),
-      onChanged: ( value ) => setState((){
-        producto.disponible = value;
-      })
+      onChanged: ( value )
+        {producto.disponible = value; }
+      
     );
 
   }
@@ -120,7 +127,7 @@ class _ProductoPageState extends State<ProductoPage> {
         borderRadius: BorderRadius.circular(20.0)
       ),
       color: Colors.deepPurple,
-      child: Text('Guardar', style: TextStyle( color: Colors.white ) ),
+      child: Text((!action) ? 'Crear' : 'Editar', style: TextStyle( color: Colors.white ) ),
       onPressed: _submit,
     );
   }
@@ -131,23 +138,19 @@ class _ProductoPageState extends State<ProductoPage> {
 
     formKey.currentState.save();
 
-    print( producto.titulo );
-    print( producto.valor );
-    print( producto.disponible );
-    print("Todo okay");
-
-
-    if( producto == null ){
+    if( !action ){
 
       productoProvider.crearProducto(producto); 
+      mostrarSnackbar("Se ha creado un nuevo producto correctamente.");
 
-    }else{
+    } else{
 
       productoProvider.editarProducto(producto);
+      mostrarSnackbar("Se ha editado correctamente un producto.");
 
     }    
 
-    mostrarSnackbar(" Se ha guardado exitosamente ");
+  
 
   }
 
@@ -157,8 +160,10 @@ class _ProductoPageState extends State<ProductoPage> {
       content: Text( mensaje ),
       duration: const Duration( milliseconds: 1500 ),
       action: SnackBarAction(
-        label: 'ACTION',
-        onPressed: () { },
+        label: 'Ir a home',
+        onPressed: () {
+          Navigator.pushNamed( context, 'home' );
+        },
       ),
     ));
   }
