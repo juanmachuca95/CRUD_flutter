@@ -137,11 +137,17 @@ class _ProductoPageState extends State<ProductoPage> {
     );
   }
 
-  void _submit(){
+  void _submit() async {
 
     if(!formKey.currentState.validate()) return;
 
     formKey.currentState.save();
+
+    if( foto != null ){
+
+      producto.fotoUrl = await productoProvider.subirImagen(foto);
+
+    }
 
     if( !action ){
 
@@ -177,8 +183,11 @@ class _ProductoPageState extends State<ProductoPage> {
 
     if(producto.fotoUrl != null){
       
-      return Container(
-
+      return FadeInImage(
+        image: NetworkImage( producto.fotoUrl ),
+        placeholder: AssetImage( 'assets/no-image.png'),
+        height: 300.0,
+        fit: BoxFit.contain
       );
 
     }else{
@@ -223,6 +232,7 @@ class _ProductoPageState extends State<ProductoPage> {
 
     if( foto != null ){
       //Limpieza
+      producto.fotoUrl = null;
     } 
 
     setState((){});
