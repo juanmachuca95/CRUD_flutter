@@ -183,11 +183,14 @@ class _ProductoPageState extends State<ProductoPage> {
 
     }else{
 
-      return Image(
-         image: AssetImage( foto?.path ?? 'assets/no-image.png'),
-         height: 300,
-         fit: BoxFit.cover
-       );
+       if( foto != null ){
+        return Image.file(
+          foto,
+          fit: BoxFit.cover,
+          height: 300.0,
+        );
+      }
+      return Image.asset('assets/no-image.png');
 
     }
 
@@ -206,11 +209,17 @@ class _ProductoPageState extends State<ProductoPage> {
   _procesarImage(ImageSource tipo) async {
     
     final _picker  = ImagePicker();
-    final _pickerFile = await _picker.getImage(
+    final _pickedFile = await _picker.getImage(
       
       source: tipo, 
     
     );
+
+    try {
+      foto = File( _pickedFile.path );
+    } catch (e) {
+      print('$e');
+    }
 
     if( foto != null ){
       //Limpieza
