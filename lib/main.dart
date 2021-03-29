@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       child:MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter CRUD',
-        initialRoute: 'home',
+        initialRoute: 'login',
 
         /**Mis Rutas */
         routes: <String, WidgetBuilder>{

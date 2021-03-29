@@ -1,16 +1,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttercrud/src/bloc/provider.dart';
-import 'package:fluttercrud/src/pages/registro_page.dart';
+import 'package:fluttercrud/src/pages/login_page.dart';
+import 'package:fluttercrud/src/providers/usuarios_provider.dart';
 
 
-class LoginPage extends StatefulWidget {
+class RegistroPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegistroPageState createState() => _RegistroPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistroPageState extends State<RegistroPage> {
   
+  final usuariosProvider = new UsuariosProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: Column(
               children: [
-                Text('Ingreso', style: TextStyle( fontSize: 20.0 )),
+                Text('Register', style: TextStyle( fontSize: 20.0 )),
                 SizedBox( height: 20.0 ),
                 _crearEmail( bloc ),
                 SizedBox( height: 20.0 ),
@@ -102,12 +105,16 @@ class _LoginPageState extends State<LoginPage> {
           ),
           SizedBox( height: 20.0 ),
           MaterialButton(
-            child: Text('¿Quieres registrarte?'),
+            child: Text('¿Ya tienes cuenta?'),
             onPressed: () => Navigator.pushReplacement(context, 
-              MaterialPageRoute(builder:(BuildContext context) => RegistroPage()),
-          ),   
-        ),                                                                                                                                                                                                                                                                                                                                                                                                           
-      ])
+              MaterialPageRoute(
+                builder:(BuildContext context) => LoginPage()
+              ),
+            ),
+          ),
+          SizedBox( height: 20.0 ),
+        ],                                                                                                                                                                                                                                                                                                                                                                                                                          
+      )
     );
 
   }
@@ -171,11 +178,11 @@ class _LoginPageState extends State<LoginPage> {
               minWidth: double.infinity,
               padding: EdgeInsets.all( 20.0 ),
               color: Colors.blue,
-              child: Text('Ingresar', style: TextStyle( color: Colors.black )),
+              child: Text('Crear cuenta', style: TextStyle( color: Colors.black )),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              onPressed: (!snapshot.hasData) ? null: ( ) => _login( bloc , context),
+              onPressed: (!snapshot.hasData) ? null: ( ) => _register( bloc , context),
             ),
           );
         },
@@ -183,12 +190,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  _login( LoginBloc bloc, BuildContext context ){
+  _register( LoginBloc bloc, BuildContext context ){
 
     print( " Email: $bloc.email" );
     print( " Password: $bloc.password" );
-
+    usuariosProvider.nuevoUsuario(bloc.email, bloc.password);
     //Navigator.pushNamed(context, 'home');
-    Navigator.pushReplacementNamed(context, 'home');
+    //Navigator.pushReplacementNamed(context, 'home');
   }
 }
