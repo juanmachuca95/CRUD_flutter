@@ -168,9 +168,11 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
 
-  Widget _crearButton( bloc ){
+  Widget _crearButton( LoginBloc bloc ){
+
     return StreamBuilder(
         stream: bloc.formValidStream,
+
         builder: ( BuildContext context, AsyncSnapshot snapshot){
           return Container(
             padding: EdgeInsets.symmetric( horizontal: 40.0 ),
@@ -182,7 +184,7 @@ class _RegistroPageState extends State<RegistroPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              onPressed: (!snapshot.hasData) ? null: ( ) => _register( bloc , context),
+              onPressed: (!snapshot.hasData) ? null : () => _register( bloc , context ),
             ),
           );
         },
@@ -190,12 +192,18 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
 
-  _register( LoginBloc bloc, BuildContext context ){
+  _register( LoginBloc bloc, BuildContext context ) async {
 
-    print( " Email: $bloc.email" );
-    print( " Password: $bloc.password" );
-    usuariosProvider.nuevoUsuario(bloc.email, bloc.password);
-    //Navigator.pushNamed(context, 'home');
-    //Navigator.pushReplacementNamed(context, 'home');
+    final mensaje = await usuariosProvider.nuevoUsuario(bloc.email, bloc.password);
+    
+    if(mensaje['ok']){
+      
+      print(mensaje['token']);
+    
+    }else{
+
+      print(mensaje['mensaje']);
+    
+    }
   }
 }

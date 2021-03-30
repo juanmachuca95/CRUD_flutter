@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttercrud/src/bloc/provider.dart';
 import 'package:fluttercrud/src/pages/registro_page.dart';
+import 'package:fluttercrud/src/providers/usuarios_provider.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -11,6 +12,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   
+  final usuariosProvider = new UsuariosProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,12 +186,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  _login( LoginBloc bloc, BuildContext context ){
+  _login( LoginBloc bloc, BuildContext context ) async {
 
-    print( " Email: $bloc.email" );
-    print( " Password: $bloc.password" );
-
+    final mensaje = await usuariosProvider.login(bloc.email, bloc.password );
     //Navigator.pushNamed(context, 'home');
-    Navigator.pushReplacementNamed(context, 'home');
+    
+    if(mensaje['ok']){
+      
+       Navigator.pushReplacementNamed(context, 'home');
+    
+    }else{
+
+      print(mensaje['mensaje']);
+    
+    }
   }
 }
